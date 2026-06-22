@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reframing — Chapter 4 Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14161f;
+  --ink-2:#1d2030;
+  --paper:#f5f2ea;
+  --paper-dim:#e6e1d4;
+  --focus:#e8603c;       /* the highlight / contrast color */
+  --focus-soft:#f4a98e;
+  --teal:#46998f;        /* secondary: business / client cue */
+  --teal-soft:#8fc3bc;
+  --muted:#8c8779;
+  --line:rgba(245,242,234,.14);
+  --maxw:760px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:'Inter',system-ui,sans-serif;
+  line-height:1.7;
+  font-size:18px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ---------- progress lens ---------- */
+.progress-wrap{position:fixed;top:0;left:0;right:0;height:4px;z-index:90;background:rgba(255,255,255,.05)}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--focus));transition:width .15s linear}
+.lens{position:fixed;top:14px;right:18px;z-index:91;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--muted);background:rgba(20,22,31,.7);backdrop-filter:blur(8px);padding:6px 11px;border-radius:30px;border:1px solid var(--line)}
+.lens b{color:var(--focus);font-weight:600}
+
+/* ---------- chapter nav dots ---------- */
+.dots{position:fixed;top:50%;left:18px;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;gap:13px}
+.dots button{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;cursor:pointer;padding:0;transition:.25s;position:relative}
+.dots button:hover{border-color:var(--focus);transform:scale(1.25)}
+.dots button.active{background:var(--focus);border-color:var(--focus)}
+.dots button span{position:absolute;left:20px;top:50%;transform:translateY(-50%);white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--paper);background:var(--ink-2);padding:3px 9px;border-radius:5px;opacity:0;pointer-events:none;transition:.2s;border:1px solid var(--line)}
+.dots button:hover span{opacity:1}
+@media(max-width:900px){.dots{display:none}}
+
+/* ---------- sections ---------- */
+section{max-width:var(--maxw);margin:0 auto;padding:11vh 26px}
+.step{opacity:0;transform:translateY(34px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.step.in{opacity:1;transform:none}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--focus);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:30px;height:1px;background:var(--focus);display:inline-block}
+
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1.02;letter-spacing:-.02em;margin-bottom:22px}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.9rem,4.5vw,2.9rem);line-height:1.08;letter-spacing:-.015em;margin-bottom:20px}
+h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.42rem;margin:30px 0 12px;letter-spacing:-.01em}
+p{margin-bottom:18px;color:#ddd8cb}
+p.lead{font-size:1.18rem;color:var(--paper)}
+
+/* ---------- the keyword focus treatment ---------- */
+.k{
+  position:relative;
+  color:var(--paper);
+  font-weight:600;
+  background:linear-gradient(180deg,transparent 58%,rgba(232,96,60,.30) 58%);
+  padding:0 .08em;
+  border-radius:2px;
+  transition:background .5s ease, color .5s ease, filter .5s ease;
+  filter:blur(.4px);
+}
+.step.in .k{filter:blur(0)}
+.k.teal{background:linear-gradient(180deg,transparent 58%,rgba(70,153,143,.34) 58%)}
+.k.strong{background:var(--focus);color:#14161f;font-weight:700;filter:blur(0)}
+.k.strong.teal{background:var(--teal)}
+
+/* hero */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center}
+.quote{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:1.3rem;color:var(--teal-soft);border-left:2px solid var(--teal);padding-left:20px;margin:26px 0 8px;max-width:560px}
+.quote cite{display:block;font-style:normal;font-size:.85rem;color:var(--muted);margin-top:10px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+.scrollcue{margin-top:54px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.15em;display:flex;align-items:center;gap:10px;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* cards */
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin:22px 0}
+.card.paper{background:var(--paper);color:var(--ink)}
+.card.paper p{color:#33312b}
+.card.paper h3{color:var(--ink)}
+
+/* gaps map grid */
+.gaps{display:grid;grid-template-columns:auto 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:24px 0;font-size:15px}
+.gaps>div{background:var(--ink-2);padding:14px 16px}
+.gaps .hd{background:#262a3d;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-soft)}
+.gaps .rowlbl{background:#262a3d;font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;display:flex;align-items:center}
+.gaps .rowlbl.s{color:var(--teal-soft)} .gaps .rowlbl.i{color:#e8d8a8} .gaps .rowlbl.c{color:var(--focus-soft)}
+@media(max-width:620px){.gaps{font-size:13px}.gaps>div{padding:10px}}
+
+/* the four properties — flip/reveal pairs */
+.prop{border:1px solid var(--line);border-radius:12px;margin:16px 0;overflow:hidden}
+.prop summary{cursor:pointer;list-style:none;padding:18px 22px;background:var(--ink-2);font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;display:flex;align-items:center;justify-content:space-between;transition:.2s}
+.prop summary::-webkit-details-marker{display:none}
+.prop summary:hover{background:#262a3d}
+.prop summary .plus{font-family:'JetBrains Mono',monospace;color:var(--focus);font-size:1.4rem;transition:.3s}
+.prop[open] summary .plus{transform:rotate(45deg)}
+.prop .body{padding:20px 22px 24px}
+.ex{display:grid;gap:10px;margin-top:8px}
+.ex .bad,.ex .good{padding:11px 15px;border-radius:8px;font-size:15px;line-height:1.5}
+.ex .bad{background:rgba(232,96,60,.10);border-left:3px solid var(--focus)}
+.ex .good{background:rgba(70,153,143,.12);border-left:3px solid var(--teal)}
+.ex .tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ex .bad .tag{color:var(--focus-soft)} .ex .good .tag{color:var(--teal-soft)}
+
+/* logic path */
+.path{counter-reset:step;margin:22px 0}
+.path .node{display:flex;gap:16px;padding:13px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.path .node:last-child{border-bottom:none}
+.path .num{counter-increment:step;flex:none;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--focus);color:var(--focus);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.path .num::before{content:counter(step)}
+.path .node .txt{padding-top:3px}
+.path .node .kind{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-soft);display:block;margin-bottom:2px}
+
+/* practices */
+.practice{display:flex;gap:18px;margin:20px 0;align-items:flex-start}
+.practice .n{flex:none;font-family:'Fraunces',serif;font-size:2.4rem;font-weight:600;color:var(--focus);line-height:1;width:46px}
+
+/* outcomes scale */
+.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}
+.scale .o{background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:15px 14px;font-size:14px;position:relative;overflow:hidden}
+.scale .o .lab{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;margin-bottom:6px;display:block}
+.scale .o::before{content:"";position:absolute;top:0;left:0;right:0;height:3px}
+.scale .o:nth-child(1)::before{background:var(--focus)}
+.scale .o:nth-child(2)::before{background:linear-gradient(90deg,var(--focus),var(--teal))}
+.scale .o:nth-child(3)::before{background:var(--teal)}
+.scale .o:nth-child(4)::before{background:var(--muted)}
+@media(max-width:680px){.scale{grid-template-columns:1fr 1fr}}
+
+/* scenario walkthrough — interactive trace */
+.trace{margin:24px 0}
+.trace .tstep{border:1px solid var(--line);border-radius:11px;margin:11px 0;background:var(--ink-2);overflow:hidden;transition:.3s}
+.trace .tstep.lit{border-color:var(--focus);box-shadow:0 0 0 1px var(--focus),0 8px 30px rgba(232,96,60,.13)}
+.trace .tstep .top{padding:15px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.trace .tstep .move{font-family:'Fraunces',serif;font-weight:600;font-size:1.08rem}
+.trace .tstep .tech{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--teal-soft);text-transform:uppercase;flex:none;text-align:right;max-width:42%}
+.trace .tstep .detail{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 18px}
+.trace .tstep.lit .detail{max-height:340px;padding:0 18px 18px}
+.trace .tstep .q{font-style:italic;color:var(--focus-soft);border-left:2px solid var(--focus);padding-left:14px;margin:4px 0 10px}
+
+/* mini scenarios toggle */
+.scenes{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 14px}
+.scenes button{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;padding:9px 15px;border-radius:30px;border:1px solid var(--line);background:var(--ink-2);color:var(--paper);cursor:pointer;transition:.2s}
+.scenes button:hover{border-color:var(--focus)}
+.scenes button.on{background:var(--focus);border-color:var(--focus);color:#14161f;font-weight:600}
+.scenebox{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:24px 26px;min-height:150px}
+.scenebox .out{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-soft);margin-top:14px;display:inline-block;border:1px solid var(--teal);border-radius:30px;padding:5px 14px}
+
+/* conditions table */
+.cond{margin:22px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.cond .crow{display:grid;grid-template-columns:1fr 1.2fr 1.2fr;border-bottom:1px solid var(--line)}
+.cond .crow:last-child{border-bottom:none}
+.cond .crow>div{padding:13px 16px;font-size:14.5px}
+.cond .crow.head>div{background:#262a3d;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.cond .cwhat{font-family:'Fraunces',serif;font-weight:600;background:#20243a}
+.cond .thrive{background:rgba(70,153,143,.07);color:#cfe7e2}
+.cond .fail{background:rgba(232,96,60,.07);color:#f1cdbf}
+@media(max-width:680px){.cond .crow{grid-template-columns:1fr}.cond .crow>div{border-bottom:1px solid var(--line)}.cond .crow.head{display:none}}
+
+/* self test */
+.qa{border:1px solid var(--line);border-radius:11px;margin:13px 0;overflow:hidden}
+.qa summary{cursor:pointer;list-style:none;padding:16px 20px;background:var(--ink-2);font-weight:600;display:flex;gap:12px;align-items:flex-start}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary .qn{font-family:'JetBrains Mono',monospace;color:var(--focus);flex:none}
+.qa .ans{padding:4px 20px 20px 52px;color:#cfcaba;font-size:15px}
+.qa[open] summary{background:#262a3d}
+
+footer{max-width:var(--maxw);margin:0 auto;padding:40px 26px 80px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+
+@media (prefers-reduced-motion:reduce){
+  .step{transition:none;opacity:1;transform:none}
+  .k{filter:none}
+  html{scroll-behavior:auto}
+  .scrollcue{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-wrap"><div class="progress-bar" id="bar"></div></div>
+<div class="lens" id="lens">FOCUS · <b>00</b>/10</div>
+<nav class="dots" id="dots"></nav>
+
+<!-- ===== HERO ===== -->
+<section id="s0" data-name="Start" class="hero">
+  <div class="step">
+    <div class="eyebrow">Chapter 4 · Performance Consulting</div>
+    <h1>Identify Strategic Opportunities<br><em style="font-style:italic;color:var(--focus)">Reactively</em></h1>
+    <p class="lead">A client hands you a <span class="k">solution</span>. Your real job is to find the <span class="k teal">result</span> hiding underneath it. That move is called <span class="k strong">reframing</span> — and it turns you from an order-taker into a strategic partner.</p>
+    <blockquote class="quote">If a problem can't be solved within the frame it was conceived, the solution lies in reframing the problem.
+      <cite>— Brian McGreevy</cite></blockquote>
+    <div class="scrollcue">SCROLL TO BEGIN THE JOURNEY ↓</div>
+  </div>
+</section>
+
+<!-- ===== 1 · THE PROBLEM ===== -->
+<section id="s1" data-name="The Problem">
+  <div class="step">
+    <div class="eyebrow">01 · Why requests need reframing</div>
+    <h2>Clients arrive with the answer already decided.</h2>
+    <p>"Build me a training program." "Design a new comp plan." Each request arrives <span class="k">with a solution in mind</span>, and the client expects you to work <span class="k">tactically</span> — just deliver it.</p>
+    <div class="card">
+      <p style="margin:0">The trouble: most performance problems have <span class="k strong">multiple causes</span>, so they need <span class="k strong teal">multiple solutions</span>. A single requested solution therefore has a <span class="k">high probability of low or no results</span>. <span class="k">Single solutions rarely work.</span></p>
+    </div>
+    <p><b style="color:var(--focus-soft)">Hidden assumption:</b> problems are usually multi-causal and the client's self-diagnosis is incomplete.</p>
+    <p><b style="color:var(--teal-soft)">Works in:</b> complex service / knowledge orgs where performance has many moving parts. <b style="color:var(--focus-soft)">Over-engineering when:</b> the request is genuinely single-cause or legally mandatory. Reframing is a tool, not a reflex.</p>
+  </div>
+</section>
+
+<!-- ===== 2 · THE MAP ===== -->
+<section id="s2" data-name="The Map">
+  <div class="step">
+    <div class="eyebrow">02 · The engine</div>
+    <h2>One mental map drives everything: <span class="k strong">SHOULD · IS · CAUSE</span></h2>
+    <p>Every powerful question you'll learn is just a <span class="k">SHOULD</span>, <span class="k">IS</span>, or <span class="k">CAUSE</span> question aimed at either the <span class="k teal">business</span> row or the <span class="k teal">performance</span> row. Learn this 2×3 grid and the rest is just <em>how</em> to ask.</p>
+    <div class="gaps">
+      <div class="hd"></div><div class="hd">Business (numbers)</div><div class="hd">Performance (behavior)</div>
+      <div class="rowlbl s">SHOULD</div><div>"Increase sales by 500 units"</div><div>"Reps must ask probing questions"</div>
+      <div class="rowlbl i">IS</div><div>"Sales rising at only 300 units"</div><div>"Reps are <em>not</em> asking them"</div>
+      <div class="rowlbl c">CAUSE</div><div>"What makes the goal hard?"</div><div>"Why aren't they asking?"</div>
+    </div>
+    <p><span class="k">SHOULD</span> = desired state · <span class="k">IS</span> = current state · <span class="k">CAUSE</span> = why the gap exists. Causes sit in three buckets: <span class="k">external</span> to the org, <span class="k">within</span> the org, and <span class="k">within individuals</span>.</p>
+  </div>
+</section>
+
+<!-- ===== 3 · POWERFUL QUESTIONS ===== -->
+<section id="s3" data-name="Powerful Q's">
+  <div class="step">
+    <div class="eyebrow">03 · Skill one</div>
+    <h2>Ask <span class="k strong">powerful questions</span></h2>
+    <p>You raise more insight by what you <span class="k">ask</span> than by what you <span class="k">tell</span>. A powerful question has four properties — tap each to see it in action.</p>
+
+    <details class="prop" open><summary><span><span class="k strong">Open-ended</span></span><span class="plus">+</span></summary>
+      <div class="body"><p>Can't be answered yes/no — forces a narrative.</p>
+        <div class="ex">
+          <div class="bad"><span class="tag">Weak — closed</span>"Are your reps identifying customer needs?"</div>
+          <div class="good"><span class="tag">Powerful</span>"What do you need reps to do <b>more, better, or differently</b> in initial customer discussions?"</div>
+        </div></div></details>
+
+    <details class="prop"><summary><span><span class="k strong">Cause-neutral</span></span><span class="plus">+</span></summary>
+      <div class="body"><p>Don't pre-suggest <em>why</em> the problem exists.</p>
+        <div class="ex">
+          <div class="bad"><span class="tag">Weak — plants a cause</span>"Do managers have <b>sufficient data</b> to decide?"</div>
+          <div class="good"><span class="tag">Powerful</span>"Why do you think managers are challenged to make these decisions?"</div>
+        </div></div></details>
+
+    <details class="prop"><summary><span><span class="k strong">Solution-neutral</span></span><span class="plus">+</span></summary>
+      <div class="body"><p>Don't assume <em>what</em> will fix it.</p>
+        <div class="ex">
+          <div class="bad"><span class="tag">Weak — assumes training</span>"What should supervisors do differently <b>after this workshop</b>?"</div>
+          <div class="good"><span class="tag">Powerful</span>"What do you want supervisors to do differently on the job?"</div>
+        </div></div></details>
+
+    <details class="prop"><summary><span><span class="k strong">Focused</span></span><span class="plus">+</span></summary>
+      <div class="body"><p>Aim at <em>one</em> cell of the Gaps Map, not the whole situation.</p>
+        <div class="ex">
+          <div class="bad"><span class="tag">Weak — vague</span>"What's going on?"</div>
+          <div class="good"><span class="tag">Powerful — performance IS</span>"What actions do technicians take when the process is outside specifications?"</div>
+        </div></div></details>
+
+    <div class="card paper" style="margin-top:24px">
+      <p style="margin:0"><b>The strategic bonus:</b> focused, neutral questions make it easy for the client to say <span class="k strong">"I don't know."</span> That admission is <b>gold</b> — it's your opening to gather information instead of jumping to a solution.</p>
+    </div>
+    <p style="margin-top:18px"><b style="color:var(--focus-soft)">Fails when:</b> the culture reads questioning as stalling or insubordination, or a crisis demands action now. Mitigation: earn the right to question first through access, credibility & trust.</p>
+  </div>
+</section>
+
+<!-- ===== 4 · LOGIC PATH ===== -->
+<section id="s4" data-name="Logic Path">
+  <div class="step">
+    <div class="eyebrow">04 · Skill two</div>
+    <h2>Sequence them in a <span class="k strong">compelling logic path</span></h2>
+    <p>Right questions in the wrong order feel like an interrogation. The governing rule:</p>
+    <div class="card"><p style="margin:0;font-family:'Fraunces',serif;font-size:1.3rem;font-weight:600">Start with the <span class="k strong">client's mindset</span> — enter the map at the <span class="k teal">highest-level need they actually raised</span>, then navigate the rest.</p></div>
+
+    <h3>Path A — client entered on the <span style="color:var(--focus)">performance</span> side</h3>
+    <p style="font-size:15px;color:var(--muted)">"I want training for my new employees."</p>
+    <div class="path">
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">Performance IS</span>What have you seen them doing, or not doing?</div></div>
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">Performance SHOULD</span>What do you need them to do more/better/differently?</div></div>
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">Performance CAUSE</span>Why isn't that happening today?</div></div>
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">→ Business SHOULD</span>If they performed that way, what's the impact on results?</div></div>
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">Business IS → CAUSE</span>Current results vs. goal? What's behind the gap?</div></div>
+    </div>
+
+    <h3>Path B — client entered on the <span style="color:var(--teal)">business</span> side</h3>
+    <p style="font-size:15px;color:var(--muted)">"Accidents are up; I want a refresher course <em>and</em> a shift competition." (Two pre-baked solutions — set them aside.)</p>
+    <div class="path">
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">Business SHOULD</span>What are the safety goals?</div></div>
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">Business IS</span>How are we tracking against each?</div></div>
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">Business CAUSE</span>Why are safety results declining?</div></div>
+      <div class="node"><div class="num"></div><div class="txt"><span class="kind">→ Performance</span>Operators are key — what must they do differently to hit the goals?</div></div>
+    </div>
+    <p><b style="color:var(--focus-soft)">Assumption:</b> a coherent need sits under the request and the client can speak to the metrics. <b style="color:var(--focus-soft)">Fails when</b> the request is political/symbolic, or the client is too junior to own the numbers — the path just spins.</p>
+  </div>
+</section>
+
+<!-- ===== 5 · PRACTICES ===== -->
+<section id="s5" data-name="The 5 Moves">
+  <div class="step">
+    <div class="eyebrow">05 · Live-conversation moves</div>
+    <h2>Five core <span class="k strong">practices</span></h2>
+
+    <div class="practice"><div class="n">1</div><div><h3 style="margin:0 0 4px">Cash in on "I don't know"</h3><p style="margin:0">When the client is unsure, ask: <em>"Would it help to find that out before we move ahead?"</em> A <span class="k">yes</span> is a small commitment that quietly converts you from <span class="k">solution-deliverer</span> to <span class="k teal">information-gatherer</span>.</p></div></div>
+
+    <div class="practice"><div class="n">2</div><div><h3 style="margin:0 0 4px">Deep-drill vague answers</h3><p style="margin:0">"Be more collaborative" → <em>"What specifically would they be doing to show that?"</em> Vague words crack into "...I'm not sure" — another chance to <span class="k">cash in</span>.</p></div></div>
+
+    <div class="practice"><div class="n">3</div><div><h3 style="margin:0 0 4px">Push back on a bad solution</h3><p style="margin:0">If the named solution won't deliver the named results, <span class="k strong">voice your concern</span>. Silence = implicit <span class="k">endorsement</span>, and you'll wear the failure later.</p></div></div>
+
+    <div class="practice"><div class="n">4</div><div><h3 style="margin:0 0 4px">Use "Yes, <em>and</em>"</h3><p style="margin:0">When they still insist, don't fight to the death. <span class="k teal">Agree</span> to the solution <span class="k strong">and</span> add a parallel discovery step that often nudges toward a fuller answer.</p></div></div>
+
+    <div class="practice"><div class="n">5</div><div><h3 style="margin:0 0 4px">Be prepared to exit entirely</h3><p style="margin:0 0 8px">Every reframing talk ends in one of four outcomes:</p></div></div>
+    <div class="scale">
+      <div class="o"><span class="lab">Tactical</span>Proceed with the original solution.</div>
+      <div class="o"><span class="lab">Tactical + Strategic</span>Deliver it <em>and</em> gather more info.</div>
+      <div class="o"><span class="lab">Strategic</span>Hold the solution; gather info first.</div>
+      <div class="o"><span class="lab">No action</span>Do nothing right now.</div>
+    </div>
+    <p>The authors note <span class="k strong">10–20% of reframed requests end in "no action"</span> — and call it an <em>exciting</em> outcome: you've saved spend on a solution that wouldn't stick, with the client's full agreement.</p>
+  </div>
+</section>
+
+<!-- ===== 6 · SANDY CASE ===== -->
+<section id="s6" data-name="Sandy's Case">
+  <div class="step">
+    <div class="eyebrow">06 · The anchor case — watch every tool fire</div>
+    <h2>Sandy & the 700 financial-services reps</h2>
+    <p><b>The request:</b> the ISS VP emails — <em>"Create a <span class="k">career path</span> for our reps and an educational program about it."</em> No data. Sandy recognizes a <span class="k strong">solution request</span> and books a one-hour reframing meeting with a blank <span class="k teal">Gaps Map</span>.</p>
+    <p style="font-size:15px;color:var(--muted)">Tap each move to see the question and the technique behind it.</p>
+    <div class="trace" id="trace">
+      <div class="tstep"><div class="top"><span class="move">1 · Open at the client's mindset</span><span class="tech">open · solution-neutral</span></div>
+        <div class="detail"><p class="q">"What have you observed that leads you to believe a career path is needed now?"</p><p style="margin:0">Starts exactly where the client is — no agenda smuggled in.</p></div></div>
+      <div class="tstep"><div class="top"><span class="move">2 · A business gap surfaces</span><span class="tech">Path B → stay on business</span></div>
+        <div class="detail"><p style="margin:0">Turnover jumped from <b>&lt;8% → 16%</b> in six months. Exit interviews give only a vague "better opportunity." Sandy realizes she's been pulled to the business side and stays there.</p></div></div>
+      <div class="tstep"><div class="top"><span class="move">3 · Widen the business impact</span><span class="tech">business question</span></div>
+        <div class="detail"><p class="q">"How is this attrition impacting other business results?"</p><p style="margin:0">Uncovers a cluster: compliance violations up, complaints up, escalations up, morale down.</p></div></div>
+      <div class="tstep"><div class="top"><span class="move">4 · Cross to the performance side</span><span class="tech">focused performance Q</span></div>
+        <div class="detail"><p class="q">"Of 68 supervisors, are any seeing very low turnover? … What are they doing differently?"</p><p style="margin:0">A positive-deviance angle — what's already working internally?</p></div></div>
+      <div class="tstep"><div class="top"><span class="move">5 · Cash in on "I don't know"</span><span class="tech">★ practice #1 — the pivot</span></div>
+        <div class="detail"><p style="margin:0 0 8px">The VP admits she can't answer. Sandy: <em>"Would it help to find that out before we launch any solution?"</em> VP: yes (if quick). <b>This is the moment the role flips.</b></p></div></div>
+      <div class="tstep"><div class="top"><span class="move">6 · Move to CAUSE & deep-drill</span><span class="tech">cause-neutral + practices 1&2</span></div>
+        <div class="detail"><p class="q">"What other factors besides understaffing could be contributing?"</p><p style="margin:0">VP guesses understaffing (30+ open roles), but again lands on "I don't know — worth finding out."</p></div></div>
+    </div>
+    <div class="card paper">
+      <p style="margin:0 0 8px"><b>The reframe.</b> The career path <em>might</em> still happen — but alone it would never have fixed the cluster. Sandy reframed the <span class="k strong">request</span> (build a solution → go gather the missing information) <b>and</b> her own <span class="k strong">role</span> (solution provider → strategic partner). Outcome: <b>Strategic</b> — solution paused, discovery first.</p>
+      <p style="margin:0;font-size:15px"><b>Your transfer test:</b> it worked because the VP <em>owned</em> real metrics, <em>had</em> an hour, <em>trusted</em> Sandy enough to admit "I don't know" twice, and the org <em>had</em> internal variation to learn from. Remove any one and the same script gets harder.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7 · MINI SCENARIOS ===== -->
+<section id="s7" data-name="4 Outcomes">
+  <div class="step">
+    <div class="eyebrow">07 · Same request, four endings</div>
+    <h2>One ask → four different outcomes</h2>
+    <p style="font-style:italic;color:var(--teal-soft)">"Two of my teams are in constant conflict — run a team-building offsite."</p>
+    <div class="scenes" id="scenes">
+      <button class="on" data-s="0">A · Clean reframe</button>
+      <button data-s="1">B · "Yes, and"</button>
+      <button data-s="2">C · No reframe</button>
+      <button data-s="3">D · No action</button>
+    </div>
+    <div class="scenebox" id="scenebox"></div>
+  </div>
+</section>
+
+<!-- ===== 8 · CONDITIONS ===== -->
+<section id="s8" data-name="Thrive / Fail">
+  <div class="step">
+    <div class="eyebrow">08 · The fit map</div>
+    <h2>Where reframing <span class="k teal">thrives</span> vs. <span class="k">struggles</span></h2>
+    <div class="cond">
+      <div class="crow head"><div>Condition</div><div>Thrives</div><div>Struggles / fails</div></div>
+      <div class="crow"><div class="cwhat">Problem structure</div><div class="thrive">Multi-causal, ambiguous</div><div class="fail">Single-cause, mandatory, trivial</div></div>
+      <div class="crow"><div class="cwhat">Client's standing</div><div class="thrive">Owns the business metrics</div><div class="fail">Too junior to speak to outcomes</div></div>
+      <div class="crow"><div class="cwhat">Relationship</div><div class="thrive">Access, credibility, trust</div><div class="fail">New, low-trust, seen as a vendor</div></div>
+      <div class="crow"><div class="cwhat">Culture</div><div class="thrive">Rewards outcomes</div><div class="fail">"Activity theater" — doing = winning</div></div>
+      <div class="crow"><div class="cwhat">Time / urgency</div><div class="thrive">Room for a 30–60 min talk</div><div class="fail">Live crisis demanding action</div></div>
+      <div class="crow"><div class="cwhat">Power distance</div><div class="thrive">Questioning is welcome</div><div class="fail">Steep hierarchy; questioning = defiance</div></div>
+    </div>
+    <div class="card"><p style="margin:0"><b style="color:var(--focus-soft)">Recovery rule:</b> when conditions are missing, don't abandon the model — <span class="k strong">down-shift the tactic</span>: hard pushback → soft pushback → <span class="k teal">"Yes, and"</span> → deliver tactically while quietly gathering data for next time.</p></div>
+  </div>
+</section>
+
+<!-- ===== 9 · SELF TEST ===== -->
+<section id="s9" data-name="Self-Test">
+  <div class="step">
+    <div class="eyebrow">09 · 60-second check</div>
+    <h2>Test yourself</h2>
+    <details class="qa"><summary><span class="qn">Q1</span><span>A client asks for "communication-skills training for managers." What's your first question and which Gaps cell does it hit?</span></summary>
+      <div class="ans">Start at the client's mindset (performance side): <em>"What have you observed managers doing, or not doing, that makes you think training would help?"</em> — a <b>performance-IS</b> question.</div></details>
+    <details class="qa"><summary><span class="qn">Q2</span><span>Fix this: "Don't you think the real issue is that managers lack time?" Which property does it break?</span></summary>
+      <div class="ans">Breaks <b>cause-neutral</b> (it plants "time" as the cause) and is closed. Fix: <em>"Why do you think managers are struggling here?"</em></div></details>
+    <details class="qa"><summary><span class="qn">Q3</span><span>The client says "I'm not sure why retention dropped." Your exact next sentence — and which practice is it?</span></summary>
+      <div class="ans"><em>"Would it be helpful to find that out before we move ahead with a solution?"</em> — <b>Practice #1, cash in on "I don't know."</b></div></details>
+    <details class="qa"><summary><span class="qn">Q4</span><span>The client overrules your pushback. Name the technique and write a line.</span></summary>
+      <div class="ans"><b>"Yes, and."</b> e.g. <em>"Yes, let's run the offsite — and let me interview a few people first so we design it around the real friction, and review what surfaces."</em></div></details>
+    <details class="qa"><summary><span class="qn">Q5</span><span>Name the four end-states. Which one do ~10–20% of reframed requests reach?</span></summary>
+      <div class="ans">Tactical · Tactical+Strategic · Strategic · <b>No action</b> — the last accounts for ~10–20%.</div></details>
+  </div>
+</section>
+
+<footer>
+  Notes derived from <em>Performance Consulting</em> (Robinson, Robinson, Phillips, Phillips & Handshaw, 2015) · Ch. 4 — Identify Strategic Opportunities Reactively. Highlighted keywords and the thrive/fail analysis are a learner's interpretation layered on the source.
+</footer>
+
+<script>
+/* reveal on scroll */
+const steps=[...document.querySelectorAll('.step')];
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.15});
+steps.forEach(s=>io.observe(s));
+
+/* progress + lens + dots */
+const sections=[...document.querySelectorAll('section')];
+const bar=document.getElementById('bar'), lens=document.getElementById('lens');
+const dotsWrap=document.getElementById('dots');
+sections.forEach((sec,i)=>{
+  const b=document.createElement('button');
+  b.innerHTML='<span>'+(i===0?'Start':sec.dataset.name)+'</span>';
+  b.onclick=()=>sec.scrollIntoView({behavior:'smooth'});
+  dotsWrap.appendChild(b);
+});
+const dotBtns=[...dotsWrap.children];
+function onScroll(){
+  const h=document.documentElement;
+  const p=h.scrollTop/(h.scrollHeight-h.clientHeight);
+  bar.style.width=(p*100)+'%';
+  let cur=0;
+  sections.forEach((s,i)=>{const r=s.getBoundingClientRect();if(r.top<window.innerHeight*.4)cur=i;});
+  dotBtns.forEach((d,i)=>d.classList.toggle('active',i===cur));
+  lens.querySelector('b').textContent=String(cur).padStart(2,'0');
+}
+document.addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+/* Sandy trace — light up clicked, dim others */
+document.querySelectorAll('#trace .tstep').forEach(st=>{
+  st.querySelector('.top').onclick=()=>{
+    const was=st.classList.contains('lit');
+    document.querySelectorAll('#trace .tstep').forEach(x=>x.classList.remove('lit'));
+    if(!was)st.classList.add('lit');
+  };
+});
+
+/* mini scenarios */
+const scenes=[
+ {t:"<b>A · Clean reframe → Strategic.</b> Performance-IS questioning reveals the conflict is really about <span class='k strong'>overlapping ownership of one revenue number</span> — a structural cause, not interpersonal. An offsite won't fix accountability lines.",o:"Outcome · Strategic — offsite paused",w:"Worked because the manager controlled the structure and was open. Good-fit org."},
+ {t:"<b>B · Client won't budge → \"Yes, and.\"</b> The VP insists the board already approved the budget. One push-back fails, so: <em>\"Yes, let's run it — <span class='k strong'>and</span> let me interview people first so we design it around the real friction.\"</em>",o:"Outcome · Tactical + Strategic",w:"A political constraint made hard pushback futile; \"Yes, and\" kept the relationship and still bought discovery."},
+ {t:"<b>C · Genuinely simple → no reframe needed.</b> The \"conflict\" is two new remote hires who've literally never met. The real ask is just an intro / working-norms session.",o:"Outcome · Tactical, appropriately",w:"Reframing hard here would be over-engineering. The model is a tool, not a reflex."},
+ {t:"<b>D · Reframing finds nothing to do → No action.</b> Questions reveal the blowup was a one-off during a finished crunch; both teams say it's resolved. The client agrees an offsite would solve a problem that no longer exists.",o:"Outcome · No action (the 10–20%)",w:"Worked because the org rewards outcomes over activity — \"let's not spend\" was welcome, not seen as dodging."}
+];
+const sceneBox=document.getElementById('scenebox');
+function renderScene(i){
+  const s=scenes[i];
+  sceneBox.innerHTML="<p style='margin:0 0 4px'>"+s.t+"</p><span class='out'>"+s.o+"</span><p style='margin:14px 0 0;font-size:14.5px;color:#bdb8aa'><b style='color:var(--teal-soft)'>Why:</b> "+s.w+"</p>";
+}
+document.querySelectorAll('#scenes button').forEach(b=>{
+  b.onclick=()=>{document.querySelectorAll('#scenes button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderScene(+b.dataset.s);};
+});
+renderScene(0);
+</script>
+</body>
+</html>
